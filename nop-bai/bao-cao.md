@@ -23,42 +23,21 @@ HƯỚNG DẪN - đọc rồi XÓA TOÀN BỘ các khối chú thích này sau k
 
 ## 1. Bộ Siêu Tham Số Đã Chọn và Lý Do
 
-<!-- Khoảng 120 - 150 từ. Điền kết quả thật từ MLflow UI ở Bước 1, tối thiểu 3 lần chạy. -->
-
 | Lần chạy | n_estimators | learning_rate | max_depth | f1_score | accuracy |
 |---|---|---|---|---|---|
-| 1 | ___ | ___ | ___ | ___ | ___ |
-| 2 | ___ | ___ | ___ | ___ | ___ |
-| 3 | ___ | ___ | ___ | ___ | ___ |
+| 1 | 100 | 0.1 | 3 | 0.7109 | 0.878 |
+| 2 | 50 | 0.05 | 2 | 0.6051 | 0.846 |
+| 3 | 200 | 0.1 | 5 | 0.7149 | 0.874 |
 
-**Bộ siêu tham số đã chọn:** `n_estimators=___`, `learning_rate=___`, `max_depth=___`.
+**Bộ siêu tham số đã chọn:** `n_estimators=200`, `learning_rate=0.1`, `max_depth=5`.
 
-**Lý do:** ___
-
-<!--
-Trả lời trong phần Lý do:
-  - Vì sao bộ này tốt hơn các bộ còn lại (dựa trên f1_score, không phải accuracy)?
-  - Lần chạy có accuracy cao nhất có trùng với lần có f1_score cao nhất không?
-    Nếu không, điều đó nói lên điều gì?
-  - Bạn quan sát thấy đánh đổi nào giữa n_estimators và learning_rate?
--->
+**Lý do:** Lần chạy 3 đạt f1_score cao nhất (0.7149) trên tập holdout, vượt xa lần chạy 2 (0.6051) và nhỉnh hơn lần chạy 1 (0.7109), nên đây là bộ được chọn vì lab đánh giá theo F1 của lớp dương chứ không theo accuracy. Đáng chú ý, lần có accuracy cao nhất lại là lần chạy 1 (0.878) chứ không phải lần có f1_score cao nhất; điều này cho thấy accuracy bị lớp đa số "thu nhập thấp" kéo lên và không phản ánh đúng khả năng bắt lớp dương của mô hình. Về đánh đổi giữa n_estimators và learning_rate: lần chạy 2 giảm cả learning_rate lẫn số cây nên mô hình học chưa đủ (f1 thấp), trong khi tăng n_estimators lên 200 kèm max_depth lớn hơn giúp bù lại và cải thiện F1, đúng với đặc tính cộng dồn của GradientBoosting.
 
 ---
 
 ## 2. Vì Sao Ngưỡng Chất Lượng Đặt Trên F1 Chứ Không Phải Accuracy
 
-<!-- Khoảng 120 - 150 từ. -->
-
-___
-
-<!--
-Cần nêu được:
-  - Phân bố lớp của tập dữ liệu (tỷ lệ lớp thu nhập > 50K) và hệ quả của nó.
-  - Accuracy của một mô hình luôn trả lời "thu nhập thấp" là bao nhiêu, vì sao con số
-    đó gây hiểu nhầm.
-  - F1 của lớp dương đo điều gì mà accuracy không đo được.
-  - Vì sao KHÔNG dùng average="weighted" hay average="macro" khi gọi f1_score.
--->
+Tập dữ liệu Adult mất cân bằng: chỉ khoảng 24,8% số mẫu thuộc lớp thu nhập > 50K, còn lại 75,2% là thu nhập thấp. Hệ quả là một mô hình "luôn đoán thu nhập thấp" cho mọi mẫu vẫn đạt accuracy khoảng 0,752 dù không bắt được một trường hợp thu nhập cao nào. Con số accuracy cao đó gây hiểu nhầm vì nó chủ yếu phản ánh việc đoán đúng lớp đa số chứ không đo được năng lực thực sự của mô hình. F1 của lớp dương lại đo đồng thời precision và recall trên đúng lớp thu nhập cao mà ta quan tâm, nên phạt nặng mô hình bỏ sót hoặc báo nhầm lớp này — điều accuracy không làm được. Vì vậy khi gọi f1_score ta để mặc định tính cho lớp dương, KHÔNG dùng average="weighted" hay "macro", vì các giá trị đó bị lớp đa số kéo lên cao và làm mất ý nghĩa của ngưỡng 0,65.
 
 ---
 
