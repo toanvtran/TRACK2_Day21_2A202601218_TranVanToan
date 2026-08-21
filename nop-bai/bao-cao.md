@@ -13,11 +13,11 @@ HƯỚNG DẪN - đọc rồi XÓA TOÀN BỘ các khối chú thích này sau k
 
 | | |
 |---|---|
-| Họ và tên | ___ |
-| MSSV | ___ |
+| Họ và tên | Trần Văn Toàn |
+| MSSV | 2A202601218 |
 | Lớp / Khóa | K4 |
-| Repo GitHub | https://github.com/___/___ |
-| Ngày nộp | ___ |
+| Repo GitHub | https://github.com/toanvtran/TRACK2_Day21_2A202601218_TranVanToan |
+| Ngày nộp | 21/08/2026 |
 
 ---
 
@@ -47,9 +47,9 @@ Tập dữ liệu Adult mất cân bằng: chỉ khoảng 24,8% số mẫu thu�
 
 | Khó khăn | Nguyên nhân | Cách giải quyết |
 |---|---|---|
-| ___ | ___ | ___ |
-| ___ | ___ | ___ |
-| ___ | ___ | ___ |
+| Unit Test trên GitHub Actions lỗi `PermissionError: /C:` | Thư mục `mlruns/` bị commit kèm `meta.yaml` chứa đường dẫn Windows `file:///C:/...`, runner Ubuntu không ghi được vào `/C:` | Thêm `mlruns/` vào `.gitignore`, `git rm -r --cached mlruns/` rồi push lại để runner tự tạo store mới |
+| Service trên EC2 crash-loop, `curl :8080/healthz` không kết nối được | Model huấn luyện bằng scikit-learn 1.4.2 nhưng EC2 cài sẵn 1.7.2, `joblib.load()` lỗi unpickle | Cài đúng phiên bản `scikit-learn==1.4.2`, `joblib==1.4.2`, `numpy<2` trên EC2 rồi restart service |
+| Lệnh `curl -d '{...}'` báo `JSON decode error` trên PowerShell | PowerShell hiểu nháy đơn khác bash nên JSON bị hỏng | Dùng Git Bash với nháy đơn, hoặc `curl --data-binary "@file.json"` |
 
 ---
 
@@ -59,10 +59,10 @@ Tập dữ liệu Adult mất cân bằng: chỉ khoảng 24,8% số mẫu thu�
 
 | | f1_score | accuracy |
 |---|---|---|
-| Bước 2 (chỉ `train_batch1`) | ___ | ___ |
-| Bước 3 (thêm `train_batch2`) | ___ | ___ |
+| Bước 2 (chỉ `train_batch1`, 22.361 mẫu) | 0.7149 | 0.8740 |
+| Bước 3 (thêm `train_batch2`, 44.722 mẫu) | 0.7354 | 0.8820 |
 
-**Nhận xét:** ___
+**Nhận xét:** Sau khi gấp đôi dữ liệu, f1_score tăng nhẹ khoảng 0,02 (0,7149 → 0,7354) và accuracy tăng khoảng 0,008 (0,874 → 0,882). Vì hai nửa dữ liệu được chia ngẫu nhiên từ cùng một nguồn nên cùng phân phối, phần dữ liệu mới gần như không mang thêm thông tin mới; mức tăng nhỏ này chủ yếu do mô hình ước lượng ổn định hơn trên tập lớn hơn (giảm phương sai) chứ không phải học được mẫu mới. Điều quan trọng được kiểm chứng ở Bước 3 là quy trình tự động chạy đúng: dữ liệu mới đi trọn vòng từ commit → DVC → huấn luyện lại → quality gate → triển khai mà không cần thao tác thủ công.
 
 <!--
 Một câu trả lời trung thực kiểu "f1 giảm 0,01 vì dữ liệu mới cùng phân phối, không mang
