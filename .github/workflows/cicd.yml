@@ -59,7 +59,7 @@ jobs:
 
       - name: Authenticate to Amazon S3
         # Secret STORAGE_CREDENTIALS chua JSON:
-        #   {"aws_access_key_id":"...","aws_secret_access_key":"...","region":"ap-southeast-1"}
+        #   {"aws_access_key_id":"...","aws_secret_access_key":"...","region":"us-east-1"}
         # Doc JSON va set cac bien moi truong AWS de boto3 va DVC tu dong su dung.
         env:
           STORAGE_CREDENTIALS: ${{ secrets.STORAGE_CREDENTIALS }}
@@ -69,7 +69,7 @@ jobs:
           creds = json.loads(os.environ["STORAGE_CREDENTIALS"])
           print(f"AWS_ACCESS_KEY_ID={creds['aws_access_key_id']}")
           print(f"AWS_SECRET_ACCESS_KEY={creds['aws_secret_access_key']}")
-          print(f"AWS_DEFAULT_REGION={creds.get('region', 'ap-southeast-1')}")
+          print(f"AWS_DEFAULT_REGION={creds.get('region', 'us-east-1')}")
           PYEOF
 
       - name: Pull data with DVC
